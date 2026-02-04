@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jose Carlos del Valle - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #09090b;
+            color: #f4f4f5;
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3, h4, .serif-font {
+            font-family: 'EB Garamond', serif;
+        }
+        .bento-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .bento-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .text-gradient {
+            background: linear-gradient(to bottom right, #ffffff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .animate-scroll {
+            animation: scroll 30s linear infinite;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .bar-animate {
+            animation: growBar 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes growBar {
+            from { width: 0; }
+            to { width: var(--target-width); }
+        }
+
+        .node-animate {
+            animation: pulseNode 3s infinite;
+        }
+        @keyframes pulseNode {
+            0%, 100% { fill-opacity: 0.3; r: 3; }
+            50% { fill-opacity: 1; r: 4; }
+        }
+
+        .hero-banner-mask {
+            mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+        }
+
+        /* Logos grayscale effect */
+        .logo-item {
+            filter: grayscale(1) brightness(1.5) contrast(0.8);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        .logo-item:hover {
+            filter: grayscale(0) brightness(1);
+            opacity: 1;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Rutas simuladas basadas en tus archivos cargados
+        const ASSETS = {
+            BANNER: './assets/BannerV2.jpeg',
+            LOGOS: {
+                BBVA: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/BBVA_2019.svg/1200px-BBVA_2019.svg.png',
+                UNAM: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/UNAM_Logo.svg/1024px-UNAM_Logo.svg.png',
+                UP: 'https://www.up.edu.mx/wp-content/uploads/2023/05/logo-up-1.png',
+                AWS: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1024px-Amazon_Web_Services_Logo.svg.png',
+                TABLEAU: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Tableau_Logo.png/1200px-Tableau_Logo.png'
+            }
+        };
+
+        const LOGO_LIST = [
+            { name: "BBVA", url: ASSETS.LOGOS.BBVA },
+            { name: "UNAM", url: ASSETS.LOGOS.UNAM },
+            { name: "UP", url: ASSETS.LOGOS.UP },
+            { name: "AWS", url: ASSETS.LOGOS.AWS },
+            { name: "TABLEAU", url: ASSETS.LOGOS.TABLEAU },
+            { name: "Python", url: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" }
+        ];
+
+        // --- Visual Components ---
+
+        const TreeVisual = () => (
+            <svg viewBox="0 0 300 200" className="w-full h-full opacity-60">
+                <path d="M150 20 L80 80" stroke="#52525b" strokeWidth="1" />
+                <path d="M150 20 L220 80" stroke="#52525b" strokeWidth="1" />
+                <path d="M80 80 L40 140" stroke="#52525b" strokeWidth="1" />
+                <path d="M80 80 L120 140" stroke="#52525b" strokeWidth="1" />
+                <path d="M220 80 L180 140" stroke="#52525b" strokeWidth="1" />
+                <path d="M220 80 L260 140" stroke="#52525b" strokeWidth="1" />
+                
+                <circle cx="150" cy="20" r="4" fill="#3b82f6" className="node-animate" style={{animationDelay: '0s'}} />
+                <circle cx="80" cy="80" r="3" fill="#a1a1aa" className="node-animate" style={{animationDelay: '0.5s'}} />
+                <circle cx="220" cy="80" r="3" fill="#a1a1aa" className="node-animate" style={{animationDelay: '0.7s'}} />
+                
+                <rect x="30" y="140" width="20" height="6" rx="2" fill="#22c55e" opacity="0.6" />
+                <rect x="110" y="140" width="20" height="6" rx="2" fill="#ef4444" opacity="0.6" />
+                <rect x="170" y="140" width="20" height="6" rx="2" fill="#eab308" opacity="0.6" />
+                <rect x="250" y="140" width="20" height="6" rx="2" fill="#3b82f6" opacity="0.6" />
+
+                <text x="150" y="170" textAnchor="middle" fill="#71717a" fontSize="8" letterSpacing="1">INSIDE FOREST LOGIC</text>
+            </svg>
+        );
+
+        const FraudMetric = () => (
+            <div className="w-full h-full flex flex-col justify-end pb-4 px-6">
+                <div className="space-y-4">
+                    <div>
+                        <div className="flex justify-between text-[10px] mb-1 text-zinc-500 uppercase tracking-wider">
+                            <span>Traditional Model</span>
+                            <span>19% Prec.</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+                            <div className="h-full bg-zinc-600 bar-animate" style={{'--target-width': '19%'}}></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="flex justify-between text-[10px] mb-1 text-blue-300 uppercase tracking-wider font-bold">
+                            <span>LLM Integration (JC)</span>
+                            <span>37% Prec.</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-500 bar-animate shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{'--target-width': '37%'}}></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const ArrowRight = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1 inline-block"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        );
+
+        const ExternalLink = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline ml-1"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        );
+
+        const HeatmapVisual = () => {
+             // Generate a simple 5x5 grid
+             const cells = Array.from({ length: 25 });
+             return (
+                 <div className="grid grid-cols-5 gap-1 w-32 h-32 opacity-80">
+                    {cells.map((_, i) => (
+                        <div 
+                            key={i} 
+                            className="bg-blue-500 rounded-[1px] transition-opacity duration-1000"
+                            style={{
+                                opacity: Math.random() * 0.5 + 0.1, // Random initial opacity
+                                animation: `pulseOpacity ${2 + Math.random()}s infinite alternate`
+                            }}
+                        ></div>
+                    ))}
+                    <style>{`
+                        @keyframes pulseOpacity {
+                            0% { opacity: 0.1; }
+                            100% { opacity: 0.6; }
+                        }
+                    `}</style>
+                 </div>
+             )
+        };
+
+
+        
+        const Navbar = () => (
+            <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
+                <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                         <div className="w-6 h-6 bg-blue-600 rounded-sm flex items-center justify-center text-[10px] font-bold">JC</div>
+                         <span className="serif-font text-xl font-medium tracking-tight">José Carlos del Valle</span>
+                    </div>
+                    <div className="hidden md:flex items-center gap-8 text-xs uppercase tracking-widest font-medium text-zinc-400">
+                        <a href="#proyectos" className="hover:text-white transition-colors">Proyectos</a>
+                        <a href="#experiencia" className="hover:text-white transition-colors">Experiencia</a>
+                        <a href="#impact" className="hover:text-white transition-colors">Impacto</a>
+                        <a href="#educacion" className="hover:text-white transition-colors">Educación</a>
+                        <a href="#unlock" className="hover:text-white transition-colors">Unlock</a>
+                    </div>
+                    <a href="mailto:jcval94@gmail.com" className="bg-zinc-100 text-black px-4 py-2 text-xs font-bold rounded uppercase tracking-tighter hover:bg-white transition-all transform hover:scale-105">
+                        Contactar
+                    </a>
+                </div>
+            </nav>
+        );
+
+        const Hero = () => (
+            <section className="relative pt-32 pb-20 px-6 min-h-[90vh] flex flex-col justify-center items-center text-center">
+                {/* Banner Image with Mask */}
+                <div className="absolute inset-0 z-0 opacity-40 hero-banner-mask overflow-hidden">
+                     <img 
+                        src={ASSETS.BANNER} 
+                        alt="Background Banner" 
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2072'; }}
+                     />
+                </div>
+
+                <div className="relative z-10 max-w-4xl mx-auto space-y-10">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-black/40 backdrop-blur-sm text-[10px] tracking-[0.2em] uppercase text-blue-400">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                        Senior Data Scientist & Actuary
+                    </div>
+                    
+                    <h1 className="text-6xl md:text-8xl leading-[0.9] font-medium tracking-tighter text-gradient">
+                        Interpretable ML.<br/>
+                        <span className="serif-font italic text-zinc-400">Decisiones Reales.</span>
+                    </h1>
+                    
+                    <p className="max-w-2xl mx-auto text-lg text-zinc-400 font-light leading-relaxed">
+                        Especializado en abrir la "caja negra" de los modelos. Desde prevención de fraude en BBVA hasta librerías de segmentación supervisada.
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4">
+                        <a href="#proyectos" className="group flex items-center gap-2 bg-blue-600 text-white px-8 py-3.5 rounded-full text-sm font-bold hover:bg-blue-500 transition-all">
+                            Explorar Proyectos
+                            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Marquee = () => (
+            <div className="py-16 border-y border-white/5 bg-black/20 overflow-hidden relative">
+                <div className="flex w-[200%] animate-scroll items-center">
+                    {[...LOGO_LIST, ...LOGO_LIST, ...LOGO_LIST].map((logo, idx) => (
+                        <div key={idx} className="flex-none mx-16 flex items-center gap-4">
+                            <img src={logo.url} alt={logo.name} className="h-8 md:h-10 logo-item object-contain" />
+                            <span className="text-zinc-600 font-mono text-[10px] tracking-widest uppercase">{logo.name}</span>
+                        </div>
+                    ))}
+                </div>
+                <div className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-zinc-950 to-transparent z-10"></div>
+                <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-zinc-950 to-transparent z-10"></div>
+            </div>
+        );
+
+        const ProjectsGrid = () => (
+            <section id="proyectos" className="py-24 px-6 max-w-7xl mx-auto">
+                <div className="mb-16 flex flex-col md:flex-row justify-between items-end gap-6">
+                    <div>
+                        <h2 className="text-4xl md:text-5xl mb-4 serif-font">Proyectos Destacados</h2>
+                        <p className="text-zinc-400 max-w-xl text-lg font-light">
+                            Herramientas open-source y soluciones analíticas diseñadas para transparencia, reproducibilidad y toma de decisiones.
+                        </p>
+                    </div>
+                    <a href="https://github.com/jcval94" target="_blank" className="text-sm text-white border-b border-zinc-700 pb-1 hover:border-white transition-colors">
+                        Ver GitHub Completo <ArrowRight />
+                    </a>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* InsideForest - Main Feature */}
+                    <div className="md:col-span-2 row-span-2 bento-card rounded-2xl p-8 md:p-12 flex flex-col justify-between min-h-[450px] relative group">
+                        <div className="relative z-10 max-w-lg">
+                            <div className="inline-block px-2 py-1 bg-green-900/30 text-green-400 text-xs rounded mb-4">Python Library</div>
+                            <h3 className="text-3xl font-medium mb-4">InsideForest</h3>
+                            <p className="text-zinc-300 font-light leading-relaxed text-lg">
+                                Supervised Clustering Interpretable. Segmenta población guiándote por un target (fraude, churn) devolviendo reglas claras y métricas por segmento.
+                            </p>
+                            <ul className="mt-6 space-y-2 text-zinc-500 text-sm">
+                                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 bg-zinc-600 rounded-full"></span> Segmentación guiada por objetivo</li>
+                                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 bg-zinc-600 rounded-full"></span> Interpretabilidad utilizable (reglas compactas)</li>
+                            </ul>
+                            <div className="mt-8">
+                                <a href="https://github.com/jcval94/InsideForest" target="_blank" className="inline-flex items-center text-sm bg-white text-black px-4 py-2 rounded font-medium hover:bg-zinc-200 transition-colors">
+                                    Ver Repositorio <ExternalLink />
+                                </a>
+                            </div>
+                        </div>
+                        
+                        {/* Interactive Tree Visual in the corner */}
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[40%] h-[70%] mr-8 hidden md:block pointer-events-none">
+                            <TreeVisual />
+                        </div>
+                    </div>
+
+                    {/* Movilidad Social */}
+                    <div className="bento-card rounded-2xl p-8 flex flex-col justify-between min-h-[240px] group relative">
+                        <div className="relative z-10">
+                            <div className="inline-block px-2 py-1 bg-blue-900/30 text-blue-400 text-xs rounded mb-3">Data Analysis</div>
+                            <h3 className="text-xl font-medium mb-2 group-hover:text-white text-zinc-200">Movilidad Social (MX)</h3>
+                            <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+                                Matrices de transición reproducibles y transparencia metodológica.
+                            </p>
+                            <a href="https://movilidad-social-mx.streamlit.app/" target="_blank" className="text-xs text-zinc-500 group-hover:text-white flex items-center gap-1 transition-colors">
+                                Ver App <ArrowRight />
+                            </a>
+                        </div>
+                        {/* Heatmap Visual positioned subtly */}
+                        <div className="absolute right-4 bottom-4 pointer-events-none">
+                            <HeatmapVisual />
+                        </div>
+                    </div>
+
+                    {/* Fraud Detection Highlight */}
+                    <div className="bento-card rounded-2xl p-0 flex flex-col justify-between min-h-[240px] group relative">
+                        <div className="p-8 pb-0 relative z-10">
+                            <div className="inline-block px-2 py-1 bg-purple-900/30 text-purple-400 text-xs rounded mb-3">Case Study: BBVA</div>
+                            <h3 className="text-xl font-medium mb-2 group-hover:text-white text-zinc-200">Detección de Fraude</h3>
+                        </div>
+                        
+                        {/* Bar Chart Visual taking up bottom half */}
+                        <div className="w-full h-32 mt-auto relative z-0">
+                             <FraudMetric />
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+
+                const RealImpactSection = () => (
+            <section id="impact" className="py-28 px-6 max-w-7xl mx-auto">
+                <div className="mb-14">
+                    <div className="text-[10px] uppercase tracking-[0.35em] text-blue-400 font-bold mb-3">Real impact</div>
+                    <h2 className="text-4xl md:text-5xl serif-font mb-4">Real impact.</h2>
+                    <p className="text-zinc-500 max-w-2xl text-lg font-light">Testimonials from partners and teams.</p>
+                </div>
+
+                {/* Testimonials */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                    <div className="bento-card rounded-3xl p-8">
+                        <p className="text-zinc-300 leading-relaxed">
+                            “We reduced the evaluation pool from <span className="text-white font-medium">1/450</span> to <span className="text-white font-medium">1/34</span> without losing recall. That changed everything for ops.”
+                        </p>
+                        <div className="mt-6 text-[10px] uppercase tracking-[0.3em] text-zinc-600">Fraud Operations</div>
+                    </div>
+                    <div className="bento-card rounded-3xl p-8">
+                        <p className="text-zinc-300 leading-relaxed">
+                            “Stakeholders stopped arguing about model outputs because they could see the drivers. Adoption went from slow to immediate.”
+                        </p>
+                        <div className="mt-6 text-[10px] uppercase tracking-[0.3em] text-zinc-600">Risk &amp; Governance</div>
+                    </div>
+                    <div className="bento-card rounded-3xl p-8">
+                        <p className="text-zinc-300 leading-relaxed">
+                            “Rules + segments gave us speed and accountability. The workflow is now audit-ready by default.”
+                        </p>
+                        <div className="mt-6 text-[10px] uppercase tracking-[0.3em] text-zinc-600">Model Risk</div>
+                    </div>
+                </div>
+
+                {/* Visual impact */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-10">
+                    {/* Claims triage compression */}
+                    <div className="md:col-span-4 bento-card rounded-3xl p-8">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="text-[10px] uppercase tracking-[0.3em] text-blue-400 font-bold">Claims triage</div>
+                            <span className="text-[10px] text-zinc-600 uppercase tracking-widest">Compression</span>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div>
+                                <div className="flex justify-between text-[10px] mb-1 text-zinc-500 uppercase tracking-wider">
+                                    <span>Old</span>
+                                    <span>1/450</span>
+                                </div>
+                                <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden">
+                                    <div className="h-full bg-zinc-700 bar-animate" style={{'--target-width': '18%'}}></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div className="flex justify-between text-[10px] mb-1 text-blue-300 uppercase tracking-wider font-bold">
+                                    <span>New</span>
+                                    <span>1/34</span>
+                                </div>
+                                <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden">
+                                    <div className="h-full bg-blue-500 bar-animate shadow-[0_0_14px_rgba(59,130,246,0.45)]" style={{'--target-width': '82%'}}></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p className="mt-6 text-sm text-zinc-500 leading-relaxed">
+                            Cut review volume by ~13x while keeping outcomes stable.
+                        </p>
+                    </div>
+
+                    {/* Fraud precision uplift */}
+                    <div className="md:col-span-4 bento-card rounded-3xl p-8">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="text-[10px] uppercase tracking-[0.3em] text-blue-400 font-bold">Fraud detection</div>
+                            <span className="text-[10px] text-zinc-600 uppercase tracking-widest">Precision</span>
+                        </div>
+
+                        <div className="h-40">
+                            <FraudMetric />
+                        </div>
+
+                        <p className="mt-4 text-sm text-zinc-500 leading-relaxed">
+                            LLM enrichment increased precision from <span className="text-white font-medium">19%</span> to <span className="text-white font-medium">37%</span>.
+                        </p>
+                    </div>
+
+                    {/* Mobility segmentation */}
+                    <div className="md:col-span-4 bento-card rounded-3xl p-8 flex flex-col">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="text-[10px] uppercase tracking-[0.3em] text-blue-400 font-bold">Mobility</div>
+                            <span className="text-[10px] text-zinc-600 uppercase tracking-widest">Segmentation</span>
+                        </div>
+
+                        <div className="flex items-center justify-center py-4">
+                            <HeatmapVisual />
+                        </div>
+
+                        <p className="mt-auto text-sm text-zinc-500 leading-relaxed">
+                            Explainable segmentation that makes policy decisions inspectable.
+                        </p>
+                    </div>
+                </div>
+
+                {/* Metrics */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="bento-card rounded-2xl p-6">
+                        <div className="serif-font text-4xl text-white font-medium">1/34</div>
+                        <div className="text-[10px] uppercase tracking-widest text-zinc-600 mt-2">Review pool (was 1/450)</div>
+                    </div>
+                    <div className="bento-card rounded-2xl p-6">
+                        <div className="serif-font text-4xl text-white font-medium">19% → 37%</div>
+                        <div className="text-[10px] uppercase tracking-widest text-zinc-600 mt-2">Fraud precision w/ LLM</div>
+                    </div>
+                    <div className="bento-card rounded-2xl p-6">
+                        <div className="serif-font text-3xl text-white font-medium">$80k MXN vs $102 MXN</div>
+                        <div className="text-[10px] uppercase tracking-widest text-zinc-600 mt-2">High-value segment lift</div>
+                    </div>
+                    <div className="bento-card rounded-2xl p-6">
+                        <div className="serif-font text-4xl text-white font-medium">1.8M MXN</div>
+                        <div className="text-[10px] uppercase tracking-widest text-zinc-600 mt-2">Quarterly savings</div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const UnlockSection = () => (
+            <section id="unlock" className="py-24 px-6">
+                <div className="max-w-7xl mx-auto bento-card rounded-3xl p-10 md:p-14 text-center relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-30 pointer-events-none">
+                        <div className="absolute -top-24 left-1/3 w-[520px] h-[520px] bg-blue-800/25 rounded-full blur-[140px]"></div>
+                        <div className="absolute -bottom-28 right-1/3 w-[420px] h-[420px] bg-indigo-800/20 rounded-full blur-[120px]"></div>
+                    </div>
+
+                    <div className="relative z-10">
+                        <h2 className="text-4xl md:text-5xl serif-font mb-4">Unlock interpretable ML for your team.</h2>
+                        <p className="text-zinc-400 max-w-2xl mx-auto text-lg font-light">
+                            If you want faster decisions with explanations you can defend, let’s talk.
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+                            <a href="https://cal.com/jcval94" target="_blank" rel="noreferrer"
+                               className="w-full sm:w-auto bg-blue-600 text-white px-8 py-3 rounded-full text-sm font-bold hover:bg-blue-500 transition-all">
+                                Request a Demo
+                            </a>
+                            <a href="mailto:jcval94@gmail.com"
+                               className="w-full sm:w-auto bg-zinc-100 text-black px-8 py-3 rounded-full text-sm font-bold hover:bg-white transition-all">
+                                Email
+                            </a>
+                            <a href="https://github.com/jcval94" target="_blank" rel="noreferrer"
+                               className="w-full sm:w-auto px-8 py-3 rounded-full text-sm font-bold text-zinc-200 border border-white/10 hover:border-white/25 hover:text-white transition-all">
+                                GitHub
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const EducationSection = () => (
+            <section id="educacion" className="py-32 px-6 border-t border-white/5">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-20">
+                        <h2 className="text-4xl md:text-5xl serif-font">Formación & Credenciales</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                        {[
+                            { title: "MSc Data Science", inst: "Universidad Panamericana", logo: ASSETS.LOGOS.UP, detail: "GPA: 9.6" },
+                            { title: "BSc Actuarial Science", inst: "UNAM", logo: ASSETS.LOGOS.UNAM, detail: "Facultad de Ciencias" },
+                            { title: "AWS Machine Learning", inst: "Certificación SageMaker", logo: ASSETS.LOGOS.AWS, detail: "Model Ops & CI/CD" },
+                            { title: "Tableau Expert", inst: "Data Visualization", logo: ASSETS.LOGOS.TABLEAU, detail: "Dashboard Design" }
+                        ].map((edu, idx) => (
+                            <div key={idx} className="flex flex-col items-center text-center group">
+                                <div className="w-16 h-16 mb-6 flex items-center justify-center bg-zinc-900 rounded-2xl group-hover:scale-110 transition-transform">
+                                    <img src={edu.logo} alt={edu.inst} className="w-10 h-10 object-contain filter grayscale invert brightness-200" />
+                                </div>
+                                <h4 className="text-white font-medium mb-1">{edu.title}</h4>
+                                <p className="text-zinc-500 text-xs mb-2 uppercase tracking-tighter">{edu.inst}</p>
+                                <div className="h-px w-8 bg-zinc-800 group-hover:w-16 transition-all duration-500"></div>
+                                <p className="mt-2 text-[10px] text-zinc-600 italic">{edu.detail}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Footer = () => (
+            <footer className="py-20 px-6 border-t border-white/10 bg-black">
+                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
+                    <div>
+                        <div className="serif-font text-3xl font-medium mb-4 italic">José Carlos.</div>
+                        <p className="text-zinc-500 max-w-xs text-sm">
+                            Focalizado en la creación de pipelines reproducibles y modelos éticos.
+                        </p>
+                    </div>
+                    <div className="flex gap-16">
+                        <div className="flex flex-col gap-3">
+                            <span className="text-zinc-200 text-xs font-bold uppercase tracking-widest">Links</span>
+                            <a href="https://linkedin.com/in/jose-carlos-del-valle" className="text-zinc-500 hover:text-white text-sm">LinkedIn</a>
+                            <a href="https://github.com/jcval94" className="text-zinc-500 hover:text-white text-sm">GitHub</a>
+                        </div>
+                        <div className="flex flex-col gap-3">
+                            <span className="text-zinc-200 text-xs font-bold uppercase tracking-widest">Contacto</span>
+                            <span className="text-zinc-500 text-sm">jcval94@gmail.com</span>
+                            <span className="text-zinc-600 text-sm">CDMX, México</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-zinc-900 flex justify-between text-[10px] text-zinc-700 uppercase tracking-widest">
+                    <span>© 2026 Jose Carlos del Valle</span>
+                    <span>Designed for Impact</span>
+                </div>
+            </footer>
+        );
+
+        const App = () => (
+            <div className="bg-zinc-950 text-zinc-100">
+                <Navbar />
+                <Hero />
+                <Marquee />
+                <ProjectsGrid />
+                <RealImpactSection />
+                <EducationSection />
+                <UnlockSection />
+                <Footer />
+            </div>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
