@@ -157,6 +157,21 @@
         }
         body.theme-light .from-zinc-950 { --tw-gradient-from: var(--bg-primary); }
         body.theme-light .to-transparent { --tw-gradient-to: transparent; }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+        body.theme-light .theme-toggle {
+            background: var(--bg-secondary);
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+        }
+        body.theme-light .theme-toggle:hover {
+            color: var(--text-primary);
+        }
     </style>
 </head>
 <body class="theme-light">
@@ -288,10 +303,10 @@
                         <button
                             type="button"
                             onClick={onToggleTheme}
-                            className="flex items-center gap-2 border border-white/10 px-3 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full text-zinc-400 hover:text-white hover:border-white/40 transition-all"
+                            className="theme-toggle flex items-center gap-2 px-3 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full hover:text-white hover:border-white/40 transition-all"
                             aria-pressed={theme === 'light'}
                         >
-                            {theme === 'light' ? 'Light Mode' : 'Dark Mode'}
+                            {theme === 'light' ? 'Modo oscuro' : 'Modo claro'}
                             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: theme === 'light' ? 'var(--accent)' : 'var(--text-muted)' }}></span>
                         </button>
                         <a href="mailto:jcval94@gmail.com" className="bg-zinc-100 text-black px-4 py-2 text-xs font-bold rounded uppercase tracking-tighter hover:bg-white transition-all transform hover:scale-105">
