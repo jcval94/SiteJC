@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jose Carlos del Valle - Portfolio</title>
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4bc.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -211,6 +212,21 @@
         body.theme-light .demo-cta {
             color: #ffffff;
         }
+
+        .brand-name {
+            color: var(--text-primary);
+        }
+        body.theme-light .brand-name {
+            color: #7aa2d6;
+        }
+        .brand-mark {
+            background-color: var(--accent);
+            color: #ffffff;
+        }
+        body.theme-light .brand-mark {
+            background-color: #93c5fd;
+            color: #1f2937;
+        }
     </style>
 </head>
 <body class="theme-light">
@@ -329,8 +345,8 @@
             <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
                 <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                         <div className="w-6 h-6 bg-blue-600 rounded-sm flex items-center justify-center text-[10px] font-bold">JC</div>
-                         <span className="serif-font text-xl font-medium tracking-tight">José Carlos del Valle</span>
+                         <div className="brand-mark w-6 h-6 rounded-sm flex items-center justify-center text-[10px] font-bold">JC</div>
+                         <span className="brand-name serif-font text-xl font-medium tracking-tight">José Carlos del Valle</span>
                     </div>
                     <div className="hidden md:flex items-center gap-8 text-xs uppercase tracking-widest font-medium text-zinc-400">
                         <a href="#proyectos" className="nav-link hover:text-white transition-colors">Proyectos</a>
