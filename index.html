@@ -82,6 +82,22 @@
             from { width: 0; }
             to { width: var(--target-width); }
         }
+        .metric-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .metric-shimmer::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+            transform: translateX(-120%);
+            animation: shimmer 2.8s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-120%); }
+            100% { transform: translateX(120%); }
+        }
 
         .node-animate {
             animation: pulseNode 3s infinite;
@@ -234,7 +250,7 @@
                             <span>19% Prec.</span>
                         </div>
                         <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
-                            <div className="h-full bg-zinc-600 bar-animate" style={{'--target-width': '19%'}}></div>
+                            <div className="h-full bg-zinc-600 bar-animate metric-shimmer" style={{'--target-width': '19%'}}></div>
                         </div>
                     </div>
                     <div>
@@ -243,7 +259,7 @@
                             <span>37% Prec.</span>
                         </div>
                         <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-500 bar-animate shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{'--target-width': '37%'}}></div>
+                            <div className="h-full bg-blue-500 bar-animate metric-shimmer shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{'--target-width': '37%'}}></div>
                         </div>
                     </div>
                 </div>
@@ -370,7 +386,7 @@
         );
 
         const ProjectsGrid = () => (
-            <section id="proyectos" className="py-24 px-6 max-w-7xl mx-auto">
+            <section id="proyectos" className="py-20 px-6 max-w-7xl mx-auto">
                 <div className="mb-16 flex flex-col md:flex-row justify-between items-end gap-6">
                     <div>
                         <h2 className="text-4xl md:text-5xl mb-4 serif-font">Proyectos Destacados</h2>
@@ -444,7 +460,7 @@
         );
 
                 const RealImpactSection = () => (
-            <section id="impact" className="py-28 px-6 max-w-7xl mx-auto">
+            <section id="impact" className="py-20 px-6 max-w-7xl mx-auto">
                 <div className="mb-14">
                     <div className="text-[10px] uppercase tracking-[0.35em] text-blue-400 font-bold mb-3">Real impact</div>
                     <h2 className="text-4xl md:text-5xl serif-font mb-4">Real impact.</h2>
@@ -564,7 +580,7 @@
         );
 
         const UnlockSection = () => (
-            <section id="unlock" className="py-24 px-6">
+            <section id="unlock" className="py-20 px-6">
                 <div className="max-w-7xl mx-auto bento-card rounded-3xl p-10 md:p-14 text-center relative overflow-hidden">
                     <div className="absolute inset-0 opacity-30 pointer-events-none">
                         <div className="absolute -top-24 left-1/3 w-[520px] h-[520px] bg-blue-800/25 rounded-full blur-[140px]"></div>
@@ -597,7 +613,7 @@
         );
 
         const EducationSection = () => (
-            <section id="educacion" className="py-32 px-6 border-t border-white/5">
+            <section id="educacion" className="py-24 px-6 border-t border-white/5">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-20">
                         <h2 className="text-4xl md:text-5xl serif-font">Formación & Credenciales</h2>
@@ -626,7 +642,7 @@
         );
 
         const Footer = () => (
-            <footer className="py-20 px-6 border-t border-white/10 bg-black">
+            <footer className="py-16 px-6 border-t border-white/10 bg-black">
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
                     <div>
                         <div className="serif-font text-3xl font-medium mb-4 italic">José Carlos.</div>
